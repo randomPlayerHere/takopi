@@ -1,4 +1,4 @@
-# Us 🐙
+# Us ❤️
 
 A cute and interactive web app celebrating togetherness with adorable octopuses!
 
