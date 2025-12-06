@@ -1,0 +1,20 @@
+{
+  "name": "Us 🐙",
+  "short_name": "Us 🐙",
+  "start_url": "/?me=1",
+  "display": "standalone",
+  "background_color": "#ffc4d6",
+  "theme_color": "#ffc4d6",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

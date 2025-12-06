@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Us 🐙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc4d6">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #ffd1e8 0%, #ffc4d6 45%, #ffb3c6 100%);
+    font-family: 'Quicksand', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  .label {
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+  }
+
+  img {
+    width: 65vw;
+    max-width: 280px;
+    cursor: pointer;
+    transition: transform .15s;
+    filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.15));
+  }
+  img:active {
+    transform: scale(0.92);
+  }
+
+  .heart {
+    position: absolute;
+    font-size: 22px;
+    animation: floatUp 1.2s ease-out forwards;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-80px); opacity: 0; }
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- Partner -->
+  <div class="label">❤️</div>
+  <img id="partnerMoodImg" src="happy.png" alt="partner mood">
+
+  <!-- You -->
+  <div class="label">👤</div>
+  <img id="myMoodImg" src="happy.png" alt="my mood">
+
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcfRcd1CNlvMTf_z5VPZNKBqpG2kyeAro",
+      authDomain: "takopi-s-mood.firebaseapp.com",
+      projectId: "takopi-s-mood",
+      storageBucket: "takopi-s-mood.firebasestorage.app",
+      messagingSenderId: "5088040012",
+      appId: "1:5088040012:web:e11c32f94f5ae5cc40d0e9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const params = new URLSearchParams(window.location.search);
+    const me = params.get("me") === "2" ? "user2" : "user1";
+    const partner = me === "user1" ? "user2" : "user1";
+
+    const myRef = db.collection("moods").doc(me);
+    const partnerRef = db.collection("moods").doc(partner);
+
+    const myImg = document.getElementById("myMoodImg");
+    const partnerImg = document.getElementById("partnerMoodImg");
+
+    const HAPPY = "happy.png";
+    const ANGRY = "angry.png";
+
+    let myMood = "happy";
+
+    function setImage(img, mood) {
+      img.src = mood === "angry" ? ANGRY : HAPPY;
+    }
+
+    function heartAt(img) {
+      const r = img.getBoundingClientRect();
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "💖";
+      heart.style.left = (r.left + r.width*0.5) + "px";
+      heart.style.top = (r.top + r.height*0.4) + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1200);
+    }
+
+    myRef.onSnapshot(doc => {
+      if (doc.exists) {
+        myMood = doc.data().mood;
+        setImage(myImg, myMood);
+      } else {
+        myRef.set({ mood: myMood });
+      }
+    });
+
+    partnerRef.onSnapshot(doc => {
+      if (doc.exists) {
+        setImage(partnerImg, doc.data().mood);
+        partnerImg.style.transform = "scale(1.05)";
+        setTimeout(() => partnerImg.style.transform = "scale(1)", 300);
+      }
+    });
+
+    myImg.addEventListener("click", () => {
+      myMood = myMood === "happy" ? "angry" : "happy";
+      setImage(myImg, myMood);
+      myRef.set({ mood: myMood });
+      heartAt(myImg);
+    });
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
+</body>
+</html>
