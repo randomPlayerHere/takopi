@@ -72,12 +72,12 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBcfRcd1CNlvMTf_z5VPZNKBqpG2kyeAro",
-      authDomain: "takopi-s-mood.firebaseapp.com",
-      projectId: "takopi-s-mood",
-      storageBucket: "takopi-s-mood.firebasestorage.app",
-      messagingSenderId: "5088040012",
-      appId: "1:5088040012:web:e11c32f94f5ae5cc40d0e9"
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID
     };
 
     firebase.initializeApp(firebaseConfig);
